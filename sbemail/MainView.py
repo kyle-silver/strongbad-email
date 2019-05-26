@@ -8,19 +8,25 @@ class MainView(urwid.WidgetWrap):
     ]
 
     def __init__(self, primary_screen):
-        # loop setup
-        placeholder = urwid.SolidFill('#')
-        self.loop = urwid.MainLoop(placeholder, MainView.palette, 
+        self.loop = urwid.MainLoop(
+            urwid.SolidFill('#'), 
+            MainView.palette, 
             unhandled_input=MainView._unhandled_input)
-        # give primary screen reference to MainView to allow for modal switching
-        self.primary_screen = primary_screen
-        self.primary_screen.set_parent(self)
-        # set primary view for application
+        self.set_primary(primary_screen)
         self.set_screen(self.primary_screen)
         return super(MainView, self).__init__(self.primary_screen)
     
+    # set primary view for application
     def set_screen(self, screen):
         self.loop.widget = screen
+    
+    # give primary screen reference to MainView to allow for modal switching
+    def set_primary(self, screen):
+        screen.set_parent(self)
+        # must be set for changes to persist, see WidgetWrap docs
+        self._w = screen
+        self.primary_screen = self._w
+        self.set_screen(self._w)
     
     def reassert(self):
         self.loop.widget = self
