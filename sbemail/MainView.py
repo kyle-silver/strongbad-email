@@ -3,10 +3,15 @@ import urwid
 from .screens.Lappy486 import Lappy486
 
 class MainView(urwid.WidgetWrap):
+    palette = [
+        ('bluescreen', 'white', 'dark blue')
+    ]
+
     def __init__(self, primary_screen):
         # loop setup
         placeholder = urwid.SolidFill('#')
-        self.loop = urwid.MainLoop(placeholder, unhandled_input=MainView._unhandled_input)
+        self.loop = urwid.MainLoop(placeholder, MainView.palette, 
+            unhandled_input=MainView._unhandled_input)
         # give primary screen reference to MainView to allow for modal switching
         self.primary_screen = primary_screen
         self.primary_screen.set_parent(self)
