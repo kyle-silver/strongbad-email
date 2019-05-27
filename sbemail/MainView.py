@@ -7,7 +7,9 @@ from .screens.EmailScreen import EmailScreen
 
 class MainView(urwid.WidgetWrap):
     palette = [
-        ('bluescreen', 'white', 'dark blue')
+        ('bluescreen', 'white', 'dark blue'),
+        ('lappy_accent', 'white', 'dark blue'),
+        ('corpy_accent', 'white', 'dark cyan'),
     ]
 
     _skins = itertools.cycle([
@@ -20,9 +22,8 @@ class MainView(urwid.WidgetWrap):
             urwid.SolidFill('#'), 
             MainView.palette, 
             unhandled_input=MainView._unhandled_input)
-        self.set_primary(self.next_skin())
-        self.set_screen(self.primary_screen)
-        return super(MainView, self).__init__(self.primary_screen)
+        self.toggle_skin()
+        return super(MainView, self).__init__(self._w)
     
     # set primary view for application
     def set_screen(self, screen):
@@ -33,12 +34,12 @@ class MainView(urwid.WidgetWrap):
         screen.set_parent(self)
         # must be set for changes to persist, see WidgetWrap docs
         self._w = screen
-        self.primary_screen = self._w
         self.set_screen(self._w)
     
-    def next_skin(self):
-        return next(self._skins)
-    
+    def toggle_skin(self):
+        next_skin = next(self._skins)
+        self.set_primary(next_skin)
+
     def reassert(self):
         self.loop.widget = self
     
@@ -54,4 +55,3 @@ class MainView(urwid.WidgetWrap):
     
     def start(self):
         self.loop.run()
-
