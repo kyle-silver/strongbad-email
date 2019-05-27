@@ -4,7 +4,8 @@ import itertools
 from .SplashText import SplashText
 
 class EmailScreen(urwid.WidgetWrap):
-    _divider = '─'
+    _divider = u'─'
+    _bar = u'▀'
 
     def __init__(self, body):
         return super(EmailScreen, self).__init__(body)

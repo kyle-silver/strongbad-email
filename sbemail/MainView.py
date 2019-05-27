@@ -13,6 +13,7 @@ class MainView(urwid.WidgetWrap):
         ('lappy_accent', 'white', 'dark blue'),
         ('lappy_body', 'white', 'black'),
         ('corpy_accent', 'black', 'dark cyan'),
+        ('corpy_bar', 'dark cyan', 'black')
     ]
 
     def __init__(self):

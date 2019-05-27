@@ -8,6 +8,15 @@ class CorpyNT6(EmailScreen):
         subject = sbemail['subject'] if sbemail['subject'] is not '' else sbemail['title']
         frame = urwid.Frame(
             header=self.header(subject, palette='corpy_accent'),
-            body=urwid.Filler(urwid.Text('Corpy NT6')), 
+            body=self.body(), 
             footer=self.footer(palette='corpy_accent'))
         return super(CorpyNT6, self).__init__(frame)
+    
+    def body(self):
+        text = urwid.Text(self.sbemail['body'])
+        response_area = urwid.Edit('> ', multiline=True)
+        return urwid.ListBox(urwid.SimpleFocusListWalker([
+            text,
+            urwid.AttrMap(urwid.Divider(self._bar), 'corpy_bar'),
+            response_area,
+        ]))
