@@ -4,6 +4,8 @@ import itertools
 from .SplashText import SplashText
 
 class EmailScreen(urwid.WidgetWrap):
+    _divider = '─'
+
     def __init__(self, body):
         return super(EmailScreen, self).__init__(body)
     
@@ -13,16 +15,14 @@ class EmailScreen(urwid.WidgetWrap):
     def set_sbemail(self, sbemail):
         self.sbemail = sbemail
     
-    def selectable(self):
-        return True
-    
     def header(self, text, palette):
         text = urwid.Text(['Subject: ', text])
         text = urwid.AttrMap(text, palette)
-        return urwid.Pile([
+        header = urwid.Pile([
             text,
-            urwid.Divider('─'),
+            urwid.Divider(self._divider),
         ])
+        return header
 
     def footer(self, palette):
         text = urwid.Text([
@@ -34,15 +34,22 @@ class EmailScreen(urwid.WidgetWrap):
             (palette, 'F6'), ' Help   ',
             (palette, 'ESC'), 'ape',
         ])
-        return urwid.Pile([
-            urwid.Divider('─'),
+        footer = urwid.Pile([
+            urwid.Divider(self._divider),
             text,
         ])
+        return footer
     
     def keypress(self, size, key):
         if key == 'esc':
             raise urwid.ExitMainLoop()
+        elif key == 'f1':
+            self.parent.set_screen(SplashText('REPLIED!', self.parent))
+        elif key == 'f2':
+            self.parent.set_screen(SplashText('FORWARDED!', self.parent))
+        elif key == 'f3':
+            self.parent.set_screen(SplashText('DELETED!', self.parent))
         elif key == 'f7':
             self.parent.toggle_skin()
         else:
-            self.parent.set_screen(SplashText('DELETED!', self.parent))
+            return super(EmailScreen, self).keypress(size, key)

@@ -11,6 +11,7 @@ class MainView(urwid.WidgetWrap):
     palette = [
         ('bluescreen', 'white', 'dark blue'),
         ('lappy_accent', 'white', 'dark blue'),
+        ('lappy_body', 'white', 'black'),
         ('corpy_accent', 'black', 'dark cyan'),
     ]
 
