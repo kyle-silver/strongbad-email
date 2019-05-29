@@ -1,7 +1,7 @@
 import urwid
 import itertools
 
-from .content import sbemails
+from .content import utils
 
 from .screens.Lappy486 import Lappy486
 from .screens.CorpyNT6 import CorpyNT6
@@ -21,7 +21,7 @@ class MainView(urwid.WidgetWrap):
             urwid.SolidFill('#'), 
             MainView.palette, 
             unhandled_input=MainView._unhandled_input)
-        self.sbemails = sbemails
+        self.sbemail = utils.random_sbemail()
         self._skins = self.get_skins()
         self.toggle_skin()
         return super(MainView, self).__init__(self._w)
@@ -32,8 +32,8 @@ class MainView(urwid.WidgetWrap):
     
     def get_skins(self):
         skins = [
-            Lappy486(self.sbemails[0]),
-            CorpyNT6(self.sbemails[0]),
+            Lappy486(self.sbemail),
+            CorpyNT6(self.sbemail),
         ]
         return itertools.cycle(skins)
     
@@ -42,12 +42,18 @@ class MainView(urwid.WidgetWrap):
         skin.set_parent(self)
         # must be set for changes to persist, see WidgetWrap docs
         self._w = skin
-        skin.set_sbemail(self.sbemails[0])
+        skin.set_sbemail(self.sbemail)
         self.set_screen(self._w)
     
     def toggle_skin(self):
         next_skin = next(self._skins)
         self.set_skin(next_skin)
+    
+    def random_sbemail(self):
+        self.sbemail = utils.random_sbemail()
+        self._skins = self.get_skins()
+        self.set_skin(next(self._skins))
+
 
     def reassert(self):
         self.loop.widget = self

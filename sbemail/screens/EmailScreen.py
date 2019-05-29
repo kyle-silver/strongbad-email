@@ -50,6 +50,8 @@ class EmailScreen(urwid.WidgetWrap):
             self.parent.set_screen(SplashText('FORWARDED!', self.parent))
         elif key == 'f3':
             self.parent.set_screen(SplashText('DELETED!', self.parent))
+        elif key == 'f4':
+            self.parent.random_sbemail()
         elif key == 'f7':
             self.parent.toggle_skin()
         else:
