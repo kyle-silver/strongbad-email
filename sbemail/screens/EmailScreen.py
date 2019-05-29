@@ -6,8 +6,13 @@ from .SplashText import SplashText
 class EmailScreen(urwid.WidgetWrap):
     _divider = u'─'
     _bar = u'▀'
+    _skins = itertools.cycle([
+        'CorpyNT6',
+        'Lappy486', 
+    ])
 
-    def __init__(self, body):
+    def __init__(self, body, parent):
+        self.parent = parent
         return super(EmailScreen, self).__init__(body)
     
     def set_parent(self, parent):
@@ -51,8 +56,8 @@ class EmailScreen(urwid.WidgetWrap):
         elif key == 'f3':
             self.parent.set_screen(SplashText('DELETED!', self.parent))
         elif key == 'f4':
-            self.parent.random_sbemail()
+            self.parent.new_sbemail()
         elif key == 'f7':
-            self.parent.toggle_skin()
+            self.parent.set_skin(next(self._skins))
         else:
             return super(EmailScreen, self).keypress(size, key)

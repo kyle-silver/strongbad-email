@@ -1,6 +1,8 @@
 import urwid
 import itertools
 
+from collections import defaultdict
+
 from .content import utils
 
 from .screens.Lappy486 import Lappy486
@@ -8,6 +10,7 @@ from .screens.CorpyNT6 import CorpyNT6
 from .screens.EmailScreen import EmailScreen
 
 class MainView(urwid.WidgetWrap):
+    # class variables
     palette = [
         ('bluescreen', 'white', 'dark blue'),
         ('lappy_accent', 'white', 'dark blue'),
@@ -16,48 +19,45 @@ class MainView(urwid.WidgetWrap):
         ('corpy_bar', 'dark cyan', 'black')
     ]
 
+    _skins = defaultdict(Lappy486, {
+        'Lappy486': Lappy486,
+        'CorpyNT6': CorpyNT6,
+    })
+
+    # init logic
     def __init__(self):
+        # loop setup
         self.loop = urwid.MainLoop(
             urwid.SolidFill('#'), 
             MainView.palette, 
             unhandled_input=MainView._unhandled_input)
+        # fetch sbemail
         self.sbemail = utils.random_sbemail()
-        self._skins = self.get_skins()
-        self.toggle_skin()
+        # skin setup
+        self.skin = 'Lappy486'
+        self.set_skin(self.skin)
+        # remaining setup
         return super(MainView, self).__init__(self._w)
     
-    # set primary view for application
+    # primary view handling
     def set_screen(self, screen):
         self.loop.widget = screen
     
-    def get_skins(self):
-        skins = [
-            Lappy486(self.sbemail),
-            CorpyNT6(self.sbemail),
-        ]
-        return itertools.cycle(skins)
-    
-    # give primary screen reference to MainView to allow for modal switching
-    def set_skin(self, skin):
-        skin.set_parent(self)
-        # must be set for changes to persist, see WidgetWrap docs
-        self._w = skin
-        skin.set_sbemail(self.sbemail)
-        self.set_screen(self._w)
-    
-    def toggle_skin(self):
-        next_skin = next(self._skins)
-        self.set_skin(next_skin)
-    
-    def random_sbemail(self):
-        self.sbemail = utils.random_sbemail()
-        self._skins = self.get_skins()
-        self.set_skin(next(self._skins))
-
-
     def reassert(self):
         self.loop.widget = self
     
+    # skin handling
+    def set_skin(self, skin: str):
+        self.skin = skin
+        self._w = self._skins[self.skin](self.sbemail, self)
+        self.set_screen(self._w)
+    
+    # sbemail handling
+    def new_sbemail(self):
+        self.sbemail = utils.random_sbemail()
+        self.set_skin(self.skin)
+
+    # urwid wrangling
     def selectable(self):
         return True
     
@@ -68,5 +68,7 @@ class MainView(urwid.WidgetWrap):
         if key == 'esc':
             raise urwid.ExitMainLoop()
     
+    # loop start
     def start(self):
         self.loop.run()
+    
