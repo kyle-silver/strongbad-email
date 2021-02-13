@@ -31,13 +31,14 @@ class EmailScreen(urwid.WidgetWrap):
         return header
 
     def footer(self, palette):
+        nbsp = '\u00a0'
         text = urwid.Text([
-            (palette, 'F1'), ' Reply   ',
-            (palette, 'F2'), ' Forward   ',
-            (palette, 'F3'), ' Delete   ',
-            (palette, 'F4'), ' Rando   ',
-            (palette, 'F5'), ' Options   ',
-            (palette, 'F6'), ' Help   ',
+            (palette, 'F1'), f'{nbsp}Reply   ',
+            (palette, 'F2'), f'{nbsp}Forward   ',
+            (palette, 'F3'), f'{nbsp}Delete   ',
+            (palette, 'F4'), f'{nbsp}Rando   ',
+            (palette, 'F5'), f'{nbsp}Options   ',
+            (palette, 'F6'), f'{nbsp}Help   ',
             (palette, 'ESC'), 'ape',
         ])
         footer = urwid.Pile([

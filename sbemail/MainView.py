@@ -1,5 +1,4 @@
 import urwid
-import itertools
 
 from collections import defaultdict
 
